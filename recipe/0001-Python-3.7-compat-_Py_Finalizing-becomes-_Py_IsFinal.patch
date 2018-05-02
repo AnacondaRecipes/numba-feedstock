@@ -1,0 +1,29 @@
+From 9297ce7ed09f89bb0997f12804af69b1d4fc9100 Mon Sep 17 00:00:00 2001
+From: Ray Donnelly <mingw.android@gmail.com>
+Date: Thu, 3 May 2018 00:38:51 +0100
+Subject: [PATCH] Python 3.7 compat: _Py_Finalizing becomes _Py_IsFinalizing()
+
+After: https://github.com/python/cpython/commit/2ebc5ce42a8a9e047e790aefbf9a94811569b2b6
+---
+ numba/_dynfunc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/numba/_dynfunc.c b/numba/_dynfunc.c
+index b40cfcf26..d0330d87f 100644
+--- a/numba/_dynfunc.c
++++ b/numba/_dynfunc.c
+@@ -347,7 +347,11 @@ generator_dealloc(GeneratorObject *gen)
+     /* XXX The finalizer may be called after the LLVM module has been
+        destroyed (typically at interpreter shutdown) */
+ #if PY_MAJOR_VERSION >= 3
++#if PY_MINOR_VERSION >= 7
++    if (!_Py_IsFinalizing())
++#else
+     if (!_Py_Finalizing)
++#endif
+ #endif
+         if (gen->finalizer != NULL)
+             gen->finalizer(gen->state);
+-- 
+2.15.1 (Apple Git-101)
+

@@ -11,6 +11,8 @@ source:
   fn: '{{ name }}-{{ version }}.tar.gz'
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   '{{ hash_type }}': '{{ hash_value }}'
+  patches:
+    - 0001-Python-3.7-compat-_Py_Finalizing-becomes-_Py_IsFinal.patch
 
 build:
   number: 0
@@ -21,14 +23,14 @@ requirements:
   build:
     - python
     - setuptools
-    - llvmlite ==0.21.0
+    - llvmlite ==0.23.0
     - numpy 1.11.*
     - enum34  # [py2k]
     - singledispatch  # [py2k]
     - funcsigs  # [py2k]
   run:
     - python
-    - llvmlite ==0.21.0
+    - llvmlite ==0.23.0
     - numpy >=1.11
     - enum34  # [py2k]
     - singledispatch  # [py2k]
