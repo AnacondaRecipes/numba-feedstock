@@ -13,10 +13,13 @@ source:
   '{{ hash_type }}': '{{ hash_value }}'
   patches:
     - 0001-Python-3.7-compat-_Py_Finalizing-becomes-_Py_IsFinal.patch
+    - 0002-Python-3.7-compat-exc_stuff-move-to-struct.patch
+    - 0003-Fix-declspec-around-some-test-functions.patch
 
 build:
   number: 0
-  script: python setup.py install  --single-version-externally-managed --record=record.txt
+  script:
+    - python setup.py install  --single-version-externally-managed --record=record.txt
 
 requirements:
   build:
@@ -27,6 +30,7 @@ requirements:
     - enum34  # [py2k]
     - singledispatch  # [py2k]
     - funcsigs  # [py2k]
+    - cython
   run:
     - python
     - llvmlite ==0.23.0
