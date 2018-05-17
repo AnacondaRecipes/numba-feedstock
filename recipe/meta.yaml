@@ -1,50 +1,58 @@
 {% set name = "numba" %}
-{% set version = "0.36.1" %}
-{% set hash_type = "sha256" %}
-{% set hash_value = "a3b7540713c39f4d7a8d3b18cd49249c6356a35ee1ab5e15a89f7cf970004f0a" %}
+{% set version = "0.38.0" %}
 
 package:
-  name: '{{ name|lower }}'
-  version: '{{ version }}'
+  name: {{ name|lower }}
+  version: {{ version }}
 
 source:
-  fn: '{{ name }}-{{ version }}.tar.gz'
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  '{{ hash_type }}': '{{ hash_value }}'
-  patches:
-    - 0001-Python-3.7-compat-_Py_Finalizing-becomes-_Py_IsFinal.patch
-    - 0002-Python-3.7-compat-exc_stuff-move-to-struct.patch
-    - 0003-Fix-declspec-around-some-test-functions.patch
+  git_url: https://github.com/numba/numba
+  git_rev: {{ version }}
+  # Wait for py37 release or for next numba release
+  #  patches:
+  #  - 0001-Python-3.7-compat-_Py_Finalizing-becomes-_Py_IsFinal.patch
+  #  - 0002-Python-3.7-compat-exc_stuff-move-to-struct.patch
+  #  - 0003-Fix-declspec-around-some-test-functions.patch
 
 build:
   number: 0
-  script:
-    - python setup.py install  --single-version-externally-managed --record=record.txt
+  entry_points:
+    - pycc = numba.pycc:main
+    - numba = numba.numba_entry:main
+  script_env:
+    - PY_VCRUNTIME_REDIST
 
 requirements:
+  # build and run dependencies are duplicated to avoid setuptools issues
+  # when we also set install_requires in setup.py
   build:
     - {{ compiler('c') }}
     - {{ compiler('cxx') }}
   host:
     - python
+    - numpy
     - setuptools
-    - llvmlite ==0.23.0
-    - numpy 1.11.*
-    - enum34  # [py2k]
-    - singledispatch  # [py2k]
-    - funcsigs  # [py2k]
-    - cython
+    - llvmlite 0.23.*
+    - funcsigs                 # [py27]
+    - singledispatch           # [py27]
   run:
     - python
-    - llvmlite ==0.23.0
-    - numpy >=1.11
-    - enum34  # [py2k]
-    - singledispatch  # [py2k]
-    - funcsigs  # [py2k]
+    - {{ pin_compatible('numpy') }}
+    - llvmlite 0.23.*
+    - funcsigs                 # [py27]
+    - singledispatch           # [py27]
 
 test:
   requires:
+    - jinja2
+    # Required to test optional Numba features
+    - cffi
     - scipy
+    - ipython
+    - setuptools
+    # Need these for AOT. Do not init msvc as it may not be present
+    - {{ compiler('c') }}      # [not win]
+    - {{ compiler('cxx') }}    # [not win]
   imports:
     - numba
     - numba.annotations
@@ -76,9 +84,7 @@ test:
     - numba.typing
     - numba.unsafe
   files:
-    - run_test.py
-  commands:
-    - python -m numba.runtests
+    - mandel.py
 about:
   home: http://numba.github.com
   license: BSD 2-clause
