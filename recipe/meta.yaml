@@ -9,10 +9,10 @@ source:
   git_url: https://github.com/numba/numba
   git_rev: {{ version }}
   # Wait for py37 release or for next numba release
-  #  patches:
-  #  - 0001-Python-3.7-compat-_Py_Finalizing-becomes-_Py_IsFinal.patch
-  #  - 0002-Python-3.7-compat-exc_stuff-move-to-struct.patch
-  #  - 0003-Fix-declspec-around-some-test-functions.patch
+  patches:
+   - 0001-Python-3.7-compat-_Py_Finalizing-becomes-_Py_IsFinal.patch
+   - 0002-Python-3.7-compat-exc_stuff-move-to-struct.patch
+   # - 0003-Fix-declspec-around-some-test-functions.patch
 
 build:
   number: 0
