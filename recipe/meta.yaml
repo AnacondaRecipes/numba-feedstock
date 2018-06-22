@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.38.0" %}
+{% set version = "0.38.1" %}
 
 package:
   name: {{ name|lower }}
