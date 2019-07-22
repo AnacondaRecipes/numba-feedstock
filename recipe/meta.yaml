@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.44.1" %}
+{% set version = "0.45.0" %}
 
 package:
   name: {{ name|lower }}
@@ -101,9 +101,9 @@ about:
   license_family: BSD
   license_file: LICENSE
   summary: NumPy aware dynamic Python compiler using LLVM
-  description: | 
-    Numba is an Open Source NumPy-aware optimizing compiler for Python 
-    sponsored by Anaconda, Inc. It uses the remarkable LLVM compiler 
+  description: |
+    Numba is an Open Source NumPy-aware optimizing compiler for Python
+    sponsored by Anaconda, Inc. It uses the remarkable LLVM compiler
     infrastructure to compile Python syntax to machine code."
   doc_url: http://numba.pydata.org/
   dev_url: https://github.com/numba/numba
