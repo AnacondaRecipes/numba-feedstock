@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.45.0" %}
+{% set version = "0.45.1" %}
 
 package:
   name: {{ name|lower }}
@@ -42,6 +42,7 @@ requirements:
     - python
     - {{ pin_compatible('numpy') }}
     - {{ pin_compatible('llvmlite', max_pin='x.x') }}
+    - llvmlite >=0.29.0
     - funcsigs                 # [py27]
     - singledispatch           # [py27]
   run_constrained:
