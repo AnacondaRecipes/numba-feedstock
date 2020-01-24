@@ -45,6 +45,7 @@ requirements:
     - llvmlite >=0.31.0
     - funcsigs                 # [py27]
     - singledispatch           # [py27]
+    - setuptools
   run_constrained:
     # If TBB is present it must be at least this version from Anaconda due to
     # build flag issues triggering UB
