@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.47.0" %}
+{% set version = "0.48.0" %}
 
 package:
   name: {{ name|lower }}
@@ -35,16 +35,12 @@ requirements:
     - numpy
     - setuptools
     - llvmlite 0.31.*
-    - funcsigs                 # [py27]
-    - singledispatch           # [py27]
     - tbb-devel >=2018.0.5     # [not (win and py27)]
   run:
     - python
     - {{ pin_compatible('numpy') }}
     - {{ pin_compatible('llvmlite', max_pin='x.x') }}
     - llvmlite >=0.31.0
-    - funcsigs                 # [py27]
-    - singledispatch           # [py27]
     - setuptools
   run_constrained:
     # If TBB is present it must be at least this version from Anaconda due to
@@ -59,7 +55,6 @@ test:
     - scipy
     - ipython
     - setuptools
-    - faulthandler             # [py27]
     - tbb >=2018.0.5           # [not (win and py27)]
     - intel-openmp             # [osx]
     # Need these for AOT. Do not init msvc as it may not be present
