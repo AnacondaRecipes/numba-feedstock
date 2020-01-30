@@ -60,6 +60,7 @@ test:
     # Need these for AOT. Do not init msvc as it may not be present
     - {{ compiler('c') }}      # [not win]
     - {{ compiler('cxx') }}    # [not win]
+    - numpy <1.18
   imports:
     - numba
     - numba.annotations
