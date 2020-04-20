@@ -13,7 +13,7 @@ build:
   number: 0
   entry_points:
     - pycc = numba.pycc:main
-    - numba = numba.numba_entry:main
+    - numba = numba.misc.numba_entry:main
   script_env:
     - PY_VCRUNTIME_REDIST
   missing_dso_whitelist:  # [osx]
