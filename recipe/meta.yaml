@@ -63,7 +63,18 @@ test:
     - numpy <1.18
   imports:
     - numba
-    - numba.annotations
+    - numba.cext
+    - numba.core
+    - numba.core.annotations
+    - numba.core.datamodel
+    - numba.core.rewrites
+    - numba.core.runtime
+    - numba.core.typeconv
+    - numba.core.types
+    - numba.core.typing
+    - numba.core.unsafe
+    - numba.cpython
+    - numba.cpython.unsafe
     - numba.cuda
     - numba.cuda.cudadrv
     - numba.cuda.kernels
@@ -76,18 +87,33 @@ test:
     - numba.cuda.tests.cudasim
     - numba.cuda.tests.nocuda
     - numba.datamodel
-    - numba.jitclass
-    - numba.npyufunc
+    - numba.experimental
+    - numba.experimental.jitclass
+    - numba.misc
+    - numba.misc.help
+    - numba.np
+    - numba.np.ufunc
+    - numba.np.unsafe
+    - numba.parfors
     - numba.pycc
     - numba.rewrites
+    - numba.roc
+    - numba.roc.hlc
+    - numba.roc.hsadrv
+    - numba.roc.servicelib
+    - numba.roc.tests
+    - numba.roc.tests.hsadrv
+    - numba.roc.tests.hsapy
     - numba.runtime
     - numba.scripts
-    - numba.servicelib
+    - numba.stencils
     - numba.targets
     - numba.testing
     - numba.tests
     - numba.tests.npyufunc
-    - numba.typeconv
+    - numba.tests.pycc_distutils_usecase
+    - numba.tests.pycc_distutils_usecase.nested
+    - numba.typed
     - numba.types
     - numba.typing
     - numba.unsafe
