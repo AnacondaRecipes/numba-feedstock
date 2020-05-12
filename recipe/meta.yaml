@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.49.0" %}
+{% set version = "0.49.1" %}
 
 package:
   name: {{ name|lower }}
@@ -34,13 +34,13 @@ requirements:
     - python
     - numpy
     - setuptools
-    - llvmlite 0.32.*
+    - llvmlite 0.32.1
     - tbb-devel >=2018.0.5     # [not (win and py27)]
   run:
     - python
     - {{ pin_compatible('numpy') }}
     - {{ pin_compatible('llvmlite', max_pin='x.x') }}
-    - llvmlite >=0.32.0
+    - llvmlite >=0.32.1
     - setuptools
   run_constrained:
     # If TBB is present it must be at least this version from Anaconda due to
