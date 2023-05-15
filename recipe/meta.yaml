@@ -1,11 +1,7 @@
 {% set name = "numba" %}
 {% set version = "0.57.0" %}
-{% set numpy_min_ver = "1.18" %}  # [py<39 and not (aarch64 or s390x or arm64)]
-{% set numpy_min_ver = "1.19" %}  # [py<39 and (aarch64 or s390x or arm64)]
-{% set numpy_min_ver = "1.19" %}  # [py==39 and not arm64]
-{% set numpy_min_ver = "1.21" %}  # [(py==39 and arm64) or py==310]
-{% set numpy_min_ver = "1.24" %}  # [py==311]
-
+{% set numpy_min_ver = "1.21" %}  # [py<311]
+{% set numpy_min_ver = "1.23" %}  # [py==311]
 
 package:
   name: numba
@@ -26,9 +22,6 @@ build:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
     - {{ PYTHON }} -m pip install . --no-deps  --no-build-isolation --ignore-installed -vvv
-  # ignore_run_exports:
-  #  # tbb-devel triggers hard dependency on tbb, this is not the case.
-  #  - tbb
   skip: true  # [python_impl == 'pypy']
   skip: true  # [py<38 or s390x]
 
@@ -38,37 +31,33 @@ requirements:
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
     - llvm-openmp              # [osx]
-    - m2-patch  # [py==310 and win]
-    
-
+    - m2-patch  # [py>=310 and win]
   host:
     - python
     - pip
     - setuptools
     - wheel
-    - llvmlite =0.40.0
+    - llvmlite 0.40.0
     - numpy {{ numpy_min_ver }}
-    - tbb-devel >=2021.6
+    - tbb-devel 2021.8.0
     - _openmp_mutex            # [linux]
     - importlib_metadata       # [py<39]
-
   run:
     - python
     - importlib_metadata       # [py<39]
-    - llvmlite >=0.40
+    - llvmlite >=0.40.0,<0.41.0a0
     # NumPy has a hard upper limit.
     # NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
     # xref: https://github.com/numba/numba/issues/7756
     # NumPy >=1.23 breaks with CUDA test: test_reinterpret_array_type
     # xref: https://github.com/numba/numba/issues/8529
-    #- numpy >=1.21,!=1.22.0,!=1.22.1,!=1.22.2,<1.25
-    - numpy >=1.21 ,<1.25
+    - numpy >={{ numpy_min_ver }},!=1.22.0,!=1.22.1,!=1.22.2,<1.25
     # needed for pkg_resources
     - setuptools
-    - libllvm14
+    - libllvm14 >=14.0.6,<14.1.0a0
 
   run_constrained:
-    - tbb >=2021.6, <2022
+    - tbb >=2021.6,<2022
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6      # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
@@ -131,14 +120,12 @@ about:
   license: BSD-2-Clause
   license_family: BSD
   license_file: LICENSE
-  license_url: https://github.com/numba/numba/blob/{{ version }}/LICENSE
   summary: NumPy aware dynamic Python compiler using LLVM
   description: |
     Numba is an Open Source NumPy-aware optimizing compiler for Python 
     sponsored by Anaconda, Inc. It uses the remarkable LLVM compiler 
     infrastructure to compile Python syntax to machine code."
   dev_url: https://github.com/numba/numba
-  doc_url: https://numba.pydata.org/
   doc_source_url: https://github.com/numba/numba/tree/{{ version }}/docs
 
 extra:
