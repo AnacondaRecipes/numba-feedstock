@@ -42,7 +42,6 @@ if [[ "$NUMPY_DETECTS_AVX512_SKX_NP_GT_122" == "True" ]]; then
 fi
 
 # Check Numba executables are there
-pycc -h
 numba -h
 
 # run system info tool
