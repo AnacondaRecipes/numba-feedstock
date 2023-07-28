@@ -42,11 +42,11 @@ requirements:
     - llvmlite 0.40.0
     - numpy {{ numpy_min_ver }}
     - tbb-devel 2021.8.0
-    - _openmp_mutex            # [linux]
-    - importlib_metadata       # [py<39]
+    - _openmp_mutex 5.1        # [linux]
+    - importlib_metadata 6.0.0 # [py<39]
   run:
     - python
-    - importlib_metadata       # [py<39]
+    - importlib_metadata 6.0.0 # [py<39]
     - llvmlite >=0.40.0,<0.41.0a0
     # NumPy has a hard upper limit.
     # NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
@@ -55,7 +55,6 @@ requirements:
     # xref: https://github.com/numba/numba/issues/8529
     - numpy >={{ numpy_min_ver }},!=1.22.0,!=1.22.1,!=1.22.2,<1.25
     # needed for pkg_resources
-    - setuptools
 
   run_constrained:
     - tbb >=2021.6,<2022
