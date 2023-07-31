@@ -43,7 +43,7 @@ requirements:
     - numpy {{ numpy_min_ver }}
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
-    - importlib_metadata 6.0.0 # [py<39]
+    - importlib_metadata  # [py<39]
   run:
     - python
     - importlib_metadata 6.0.0 # [py<39]
