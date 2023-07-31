@@ -46,7 +46,7 @@ requirements:
     - importlib_metadata  # [py<39]
   run:
     - python
-    - importlib_metadata 6.0.0 # [py<39]
+    - importlib_metadata  # [py<39]
     - llvmlite >=0.40.0,<0.41.0a0
     # NumPy has a hard upper limit.
     # NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
