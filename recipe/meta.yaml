@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.57.0" %}
+{% set version = "0.57.1" %}
 {% set numpy_min_ver = "1.21" %}  # [py<311]
 {% set numpy_min_ver = "1.23" %}  # [py==311]
 
@@ -9,7 +9,7 @@ package:
 
 source:
   url: https://github.com/numba/{{ name }}/archive/{{ version }}.tar.gz
-  sha256: e6c266c20f941c1adde89e3a70e02ccc9f513635a46fa671ca8b69785e32a0d9
+  sha256: 3fa256ab0da922b9339711b9909201d02db41c3d31ba9b259d27b68eb3d3083c
   patches:
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
@@ -24,6 +24,8 @@ build:
     - {{ PYTHON }} -m pip install . --no-deps  --no-build-isolation --ignore-installed -vvv
   skip: true  # [python_impl == 'pypy']
   skip: true  # [py<38 or s390x]
+  ignore_run_exports:
+    - libllvm14 >=14.0.6,<14.1.0a0
 
 requirements:
   build:
@@ -40,11 +42,11 @@ requirements:
     - llvmlite 0.40.0
     - numpy {{ numpy_min_ver }}
     - tbb-devel 2021.8.0
-    - _openmp_mutex            # [linux]
-    - importlib_metadata       # [py<39]
+    - _openmp_mutex 5.1        # [linux]
+    - importlib_metadata  # [py<39]
   run:
     - python
-    - importlib_metadata       # [py<39]
+    - importlib_metadata  # [py<39]
     - llvmlite >=0.40.0,<0.41.0a0
     # NumPy has a hard upper limit.
     # NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
@@ -53,8 +55,6 @@ requirements:
     # xref: https://github.com/numba/numba/issues/8529
     - numpy >={{ numpy_min_ver }},!=1.22.0,!=1.22.1,!=1.22.2,<1.25
     # needed for pkg_resources
-    - setuptools
-    - libllvm14 >=14.0.6,<14.1.0a0
 
   run_constrained:
     - tbb >=2021.6,<2022
