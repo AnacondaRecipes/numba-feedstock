@@ -1,15 +1,13 @@
 {% set name = "numba" %}
-{% set version = "0.57.1" %}
-{% set numpy_min_ver = "1.21" %}  # [py<311]
-{% set numpy_min_ver = "1.23" %}  # [py==311]
+{% set version = "0.58.0" %}
 
 package:
-  name: numba
+  name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://github.com/numba/{{ name }}/archive/{{ version }}.tar.gz
-  sha256: 3fa256ab0da922b9339711b9909201d02db41c3d31ba9b259d27b68eb3d3083c
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/numba-{{ version }}.tar.gz
+  sha256: e5d5a318dc65a101ef846d7fd93f3cf2f7942494019e8342e51238b360739125
   patches:
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
@@ -21,9 +19,9 @@ build:
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
-    - {{ PYTHON }} -m pip install . --no-deps  --no-build-isolation --ignore-installed -vvv
+    - {{ PYTHON }} -m pip install . --no-deps  --no-build-isolation --ignore-installed -vv
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<38 or s390x]
+  skip: true  # [py<38 or py>311 or s390x]
   ignore_run_exports:
     - libllvm14 >=14.0.6,<14.1.0a0
 
@@ -39,22 +37,19 @@ requirements:
     - pip
     - setuptools
     - wheel
-    - llvmlite 0.40.0
-    - numpy {{ numpy_min_ver }}
+    - llvmlite 0.41.0
+    - numpy {{ numpy }}
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
     - importlib_metadata  # [py<39]
   run:
     - python
     - importlib_metadata  # [py<39]
-    - llvmlite >=0.40.0,<0.41.0a0
+    - {{ pin_compatible('llvmlite', max_pin='x.x') }}
     # NumPy has a hard upper limit.
     # NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
     # xref: https://github.com/numba/numba/issues/7756
-    # NumPy >=1.23 breaks with CUDA test: test_reinterpret_array_type
-    # xref: https://github.com/numba/numba/issues/8529
-    - numpy >={{ numpy_min_ver }},!=1.22.0,!=1.22.1,!=1.22.2,<1.25
-    # needed for pkg_resources
+    - numpy >={{ numpy }},!=1.22.0,!=1.22.1,!=1.22.2,<1.26
 
   run_constrained:
     - tbb >=2021.6,<2022
@@ -67,6 +62,8 @@ requirements:
     - scipy >=1.0
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
+    # numba-rvsdg
+    - numba-rvsdg 0.0.*      # [py==311]
 
 test:
   requires:
@@ -81,7 +78,7 @@ test:
     - setuptools
     - pip
     - wheel
-    - tbb >=2021.0, <2022
+    - tbb >=2021.6,<2022
     - llvm-openmp              # [osx]
     # Need these for AOT. Do not init msvc as it may not be present
     - {{ compiler('c') }}      # [not win]
@@ -126,7 +123,7 @@ about:
     sponsored by Anaconda, Inc. It uses the remarkable LLVM compiler 
     infrastructure to compile Python syntax to machine code."
   dev_url: https://github.com/numba/numba
-  doc_source_url: https://github.com/numba/numba/tree/{{ version }}/docs
+  doc_url: https://numba.readthedocs.io/
 
 extra:
   recipe-maintainers:
