@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.58.0" %}
+{% set version = "0.58.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/numba-{{ version }}.tar.gz
-  sha256: e5d5a318dc65a101ef846d7fd93f3cf2f7942494019e8342e51238b360739125
+  sha256: 487ded0633efccd9ca3a46364b40006dbdaca0f95e99b8b83e778d1195ebcbaa
   patches:
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
@@ -38,18 +38,16 @@ requirements:
     - setuptools
     - wheel
     - llvmlite 0.41.0
-    - numpy {{ numpy }}
+    - numpy 1.22.3 # [py<311]
+    - numpy {{ numpy }} # [py>=311]
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
     - importlib_metadata  # [py<39]
   run:
     - python
     - importlib_metadata  # [py<39]
-    - {{ pin_compatible('llvmlite', max_pin='x.x') }}
-    # NumPy has a hard upper limit.
-    # NumPy 1.22.0, 1.22.1, 1.22.2 are all broken for ufuncs
-    # xref: https://github.com/numba/numba/issues/7756
-    - numpy >={{ numpy }},!=1.22.0,!=1.22.1,!=1.22.2,<1.26
+    - llvmlite >=0.41.0,<0.42.0a0
+    - {{ pin_compatible('numpy', upper_bound='1.27') }}
 
   run_constrained:
     - tbb >=2021.6,<2022
@@ -79,10 +77,9 @@ test:
     - pip
     - wheel
     - tbb >=2021.6,<2022
-    - llvm-openmp              # [osx]
-    # Need these for AOT. Do not init msvc as it may not be present
-    - {{ compiler('c') }}      # [not win]
-    - {{ compiler('cxx') }}    # [not win]
+    # Need these for AOT.
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
 
   imports:
     - numba
