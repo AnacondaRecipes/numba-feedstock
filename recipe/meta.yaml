@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.58.1" %}
+{% set version = "0.59.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/numba-{{ version }}.tar.gz
-  sha256: 487ded0633efccd9ca3a46364b40006dbdaca0f95e99b8b83e778d1195ebcbaa
+  sha256: 12b9b064a3e4ad00e2371fc5212ef0396c80f41caec9b5ec391c8b04b6eaf2a8
   patches:
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
@@ -21,7 +21,7 @@ build:
     - export CXX="${CXX} -pthread"  # [linux]
     - {{ PYTHON }} -m pip install . --no-deps  --no-build-isolation --ignore-installed -vv
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<38 or py>311 or s390x]
+  skip: true  # [py<39 or py>312 or s390x]
   ignore_run_exports:
     - libllvm14 >=14.0.6,<14.1.0a0
 
@@ -37,16 +37,14 @@ requirements:
     - pip
     - setuptools
     - wheel
-    - llvmlite 0.41.0
+    - llvmlite 0.42.0
     - numpy 1.22.3 # [py<311]
     - numpy {{ numpy }} # [py>=311]
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
-    - importlib_metadata  # [py<39]
   run:
     - python
-    - importlib_metadata  # [py<39]
-    - llvmlite >=0.41.0,<0.42.0a0
+    - llvmlite >=0.42.0,<0.43.0a0
     - {{ pin_compatible('numpy', upper_bound='1.27') }}
 
   run_constrained:
