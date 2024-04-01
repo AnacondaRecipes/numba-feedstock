@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.59.0" %}
+{% set version = "0.59.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/numba-{{ version }}.tar.gz
-  sha256: 12b9b064a3e4ad00e2371fc5212ef0396c80f41caec9b5ec391c8b04b6eaf2a8
+  sha256: 76f69132b96028d2774ed20415e8c528a34e3299a40581bae178f0994a2f370b
   patches:
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
