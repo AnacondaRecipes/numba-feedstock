@@ -1,0 +1,24 @@
+From 154a9df61ce05820a20c44484de9bed63462bec5 Mon Sep 17 00:00:00 2001
+From: Serhii Kupriienko
+Date: Wed, 3 Jul 2024 13:22:59 +0300
+Subject: Fix numpy
+
+---
+ setup.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index 69a3f9590..54571c07e 100644
+--- a/setup.py
++++ b/setup.py
+@@ -21,7 +21,7 @@ except ImportError:
+ 
+ min_python_version = "3.9"
+ max_python_version = "3.13"  # exclusive
+-min_numpy_build_version = "2.0.0rc1"
++min_numpy_build_version = "1.22.3"
+ min_numpy_run_version = "1.22"
+ max_numpy_run_version = "2.1"
+ min_llvmlite_version = "0.43.0dev0"
+-- 
+2.44.0
