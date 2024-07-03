@@ -11,7 +11,7 @@ source:
   patches:
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
-    # Build with numpy >=1.11 instead of 2.0.0rc1
+    # Build with numpy >=1.22.3 instead of 2.0.0rc1
     - patches/fix_numpy.patch
 
 build:
