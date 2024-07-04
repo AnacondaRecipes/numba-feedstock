@@ -33,7 +33,8 @@ requirements:
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
     - llvm-openmp              # [osx]
-    - m2-patch  # [py>=310 and win]
+    - m2-patch  # [win]
+    - patch     # [unix]
   host:
     - python
     - pip
