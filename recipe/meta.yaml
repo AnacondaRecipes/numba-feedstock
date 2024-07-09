@@ -1,27 +1,29 @@
 {% set name = "numba" %}
-{% set version = "0.59.1" %}
+{% set version = "0.60.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/numba-{{ version }}.tar.gz
-  sha256: 76f69132b96028d2774ed20415e8c528a34e3299a40581bae178f0994a2f370b
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 5df6158e5584eece5fc83294b949fd30b9f1125df7708862205217e068aabf16
   patches:
-    - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
+    - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
+    # Build with numpy >=1.22.3 instead of 2.0.0rc1
+    - patches/fix_numpy.patch
 
 build:
   number: 0
-  entry_points:
-    - numba = numba.misc.numba_entry:main
+  skip: true  # [python_impl == 'pypy']
+  skip: true  # [py<39 or s390x]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
     - {{ PYTHON }} -m pip install . --no-deps  --no-build-isolation --ignore-installed -vv
-  skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<39 or py>312 or s390x]
+  entry_points:
+    - numba = numba.misc.numba_entry:main
   ignore_run_exports:
     - libllvm14 >=14.0.6,<14.1.0a0
 
@@ -31,20 +33,21 @@ requirements:
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
     - llvm-openmp              # [osx]
-    - m2-patch  # [py>=310 and win]
+    - m2-patch  # [win]
+    - patch     # [unix]
   host:
     - python
     - pip
     - setuptools
     - wheel
-    - llvmlite 0.42.0
+    - llvmlite 0.43.0
     - numpy 1.22.3 # [py<311]
     - numpy {{ numpy }} # [py>=311]
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
-    - llvmlite >=0.42.0,<0.43.0a0
+    - llvmlite >=0.43.0,<0.44.0a0
     - {{ pin_compatible('numpy', upper_bound='1.27') }}
 
   run_constrained:
@@ -52,8 +55,9 @@ requirements:
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6      # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
-    # CUDA 10.2 or later is required for CUDA support
-    - cudatoolkit >=10.2
+    # CUDA 11.2 or later is required for CUDA support
+    - cuda-version >=11.2
+    - cudatoolkit >=11.2
     # scipy 1.0 or later
     - scipy >=1.0
     # CUDA Python 11.6 or later
@@ -114,8 +118,8 @@ about:
   license_file: LICENSE
   summary: NumPy aware dynamic Python compiler using LLVM
   description: |
-    Numba is an Open Source NumPy-aware optimizing compiler for Python 
-    sponsored by Anaconda, Inc. It uses the remarkable LLVM compiler 
+    Numba is an Open Source NumPy-aware optimizing compiler for Python
+    sponsored by Anaconda, Inc. It uses the remarkable LLVM compiler
     infrastructure to compile Python syntax to machine code."
   dev_url: https://github.com/numba/numba
   doc_url: https://numba.readthedocs.io/
