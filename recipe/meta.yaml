@@ -11,14 +11,11 @@ source:
   patches:
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
-    - patches/fix_numpy.patch
-    - patches/numpy-validation-fix.patch
-    - patches/non-windows-float-fix.patch # [not win]
 
 build:
-  number: 0
+  number: 1
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<39 or s390x]
+  skip: true  # [(py<39 or py>=313) or s390x]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
@@ -42,14 +39,13 @@ requirements:
     - setuptools
     - wheel
     - llvmlite 0.43.0
-    - numpy >=2.0.0, <=2.1.3
+    - numpy 2.0
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
     - llvmlite >=0.43.0,<0.44.0a0
-    - numpy >=1.22.3
-    
+    - numpy >=1.22.3,<2.1
   run_constrained:
     - tbb >=2021.6,<2022
     # avoid confusion from openblas bugs
