@@ -11,7 +11,7 @@ source:
   patches:
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
-
+    - patches/fix_numpy.patch
 build:
   number: 1
   skip: true  # [python_impl == 'pypy']
