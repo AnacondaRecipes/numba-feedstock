@@ -11,11 +11,15 @@ source:
   patches:
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
+    # Build with numpy >=1.22.3 instead of 2.0.0rc1
     - patches/fix_numpy.patch
+    - patches/numpy-validation-fix.patch
+    - patches/osx-import-fix.patch
+
 build:
-  number: 1
+  number: 0
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<39 or s390x]
+  skip: true  # [py<39 or s390x or py>311]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
@@ -39,15 +43,16 @@ requirements:
     - setuptools
     - wheel
     - llvmlite 0.43.0
-    - numpy >=2.0.0rc1 # [py<311]
+    - numpy >=2.0.0 # [py<311]
     - numpy 2.1.3 # [py>=311]
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
     - llvmlite >=0.43.0,<0.44.0a0
-    - numpy >=1.23.5,<2.2
-
+    - numpy >=2.0.0 # [py<311]
+    - numpy 2.1.3 # [py>=311]
+    
   run_constrained:
     - tbb >=2021.6,<2022
     # avoid confusion from openblas bugs
@@ -123,8 +128,6 @@ about:
   doc_url: https://numba.readthedocs.io/
 
 extra:
-  skip-lints:
-    - invalid_url
   recipe-maintainers:
     - souravsingh
     - marcelotrevisani
@@ -132,4 +135,3 @@ extra:
     - mbargull
     - jakirkham
     - step21
-

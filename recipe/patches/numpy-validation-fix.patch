@@ -1,0 +1,13 @@
+--- numba/__init__.py	2025-01-30 13:10:43.123569185 +0000
++++ "numba/__init__ copy.py"	2025-01-30 14:18:34.999024003 +0000
+@@ -39,8 +39,8 @@
+                f"{numpy_version[0]}.{numpy_version[1]}.")
+         raise ImportError(msg)
+ 
+-    if numpy_version > (2, 0):
+-        msg = (f"Numba needs NumPy 2.0 or less. Got NumPy "
++    if numpy_version > (2, 3):
++        msg = (f"Numba needs NumPy 2.3 or less. Got NumPy "
+                f"{numpy_version[0]}.{numpy_version[1]}.")
+         raise ImportError(msg)
+ 
