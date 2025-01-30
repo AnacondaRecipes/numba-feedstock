@@ -13,7 +13,7 @@ source:
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
     - patches/fix_numpy.patch
     - patches/numpy-validation-fix.patch
-    - patches/osx-import-fix.patch # [not win]
+    - patches/non-windows-float-fix.patch # [not win]
 
 build:
   number: 0
