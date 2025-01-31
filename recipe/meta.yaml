@@ -71,9 +71,7 @@ test:
     - ipykernel
     - pygments
     - pexpect
-    - setuptools
     - pip
-    - wheel
     - tbb >=2021.6,<2022
     # Need these for AOT.
     - {{ compiler('c') }}
