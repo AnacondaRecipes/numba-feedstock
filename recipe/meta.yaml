@@ -119,6 +119,8 @@ about:
   doc_url: https://numba.readthedocs.io/
 
 extra:
+  skip-lints:
+    - invalid_url
   recipe-maintainers:
     - souravsingh
     - marcelotrevisani
