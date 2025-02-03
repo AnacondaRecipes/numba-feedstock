@@ -11,13 +11,11 @@ source:
   patches:
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
-    # Build with numpy >=1.22.3 instead of 2.0.0rc1
-    - patches/fix_numpy.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<39 or s390x]
+  skip: true  # [(py<39 or py>=313) or s390x]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
@@ -33,23 +31,21 @@ requirements:
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
     - llvm-openmp              # [osx]
-    - m2-patch  # [win]
-    - patch     # [unix]
+    - m2-patch  # [win and py>=310]
   host:
     - python
     - pip
     - setuptools
     - wheel
     - llvmlite 0.43.0
-    - numpy 1.22.3 # [py<311]
-    - numpy {{ numpy }} # [py>=311]
+    - numpy 2.0.2
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
     - llvmlite >=0.43.0,<0.44.0a0
-    - {{ pin_compatible('numpy', upper_bound='1.27') }}
-
+    # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
+    - numpy >=1.22.3,<2.1,!=2.0.1
   run_constrained:
     - tbb >=2021.6,<2022
     # avoid confusion from openblas bugs
@@ -75,9 +71,7 @@ test:
     - ipykernel
     - pygments
     - pexpect
-    - setuptools
     - pip
-    - wheel
     - tbb >=2021.6,<2022
     # Need these for AOT.
     - {{ compiler('c') }}
@@ -125,6 +119,8 @@ about:
   doc_url: https://numba.readthedocs.io/
 
 extra:
+  skip-lints:
+    - invalid_url
   recipe-maintainers:
     - souravsingh
     - marcelotrevisani
