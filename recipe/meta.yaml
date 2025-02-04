@@ -13,9 +13,9 @@ source:
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
 
 build:
-  number: 1
+  number: 0
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [py<310 or s390x]
+  skip: true  # [(py<310 or py>=314) or s390x]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
@@ -45,7 +45,7 @@ requirements:
     - python
     - llvmlite >=0.44.0,<0.45.0a0
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
-    - numpy >=1.22.3,<2.2,!=2.0.1
+    - numpy >=1.24,<2.2,!=2.0.1
   run_constrained:
     - tbb >=2021.6,<2022
     # avoid confusion from openblas bugs
