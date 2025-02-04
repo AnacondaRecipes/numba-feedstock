@@ -8,9 +8,6 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 888d2e89b8160899e19591467e8fdd4970e07606e1fbc248f239c89818d5f925
-  patches:
-    # This forces a benign DeprecationWarning in test_import.py to be ignored.
-    - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
 
 build:
   number: 0
@@ -22,8 +19,6 @@ build:
     - {{ PYTHON }} -m pip install . --no-deps  --no-build-isolation --ignore-installed -vv
   entry_points:
     - numba = numba.misc.numba_entry:main
-  ignore_run_exports:
-    - libllvm14 >=14.0.6,<14.1.0a0
 
 requirements:
   build:
@@ -31,7 +26,6 @@ requirements:
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
     - llvm-openmp              # [osx]
-    - m2-patch  # [win and py>=310]
   host:
     - python
     - pip
