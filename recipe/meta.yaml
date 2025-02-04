@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.60.0" %}
+{% set version = "0.61.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 5df6158e5584eece5fc83294b949fd30b9f1125df7708862205217e068aabf16
+  sha256: 888d2e89b8160899e19591467e8fdd4970e07606e1fbc248f239c89818d5f925
   patches:
     # This forces a benign DeprecationWarning in test_import.py to be ignored.
     - patches/ignore_deprecation_warning_in_import_test.patch  # [py>=310 and win]
@@ -15,7 +15,7 @@ source:
 build:
   number: 1
   skip: true  # [python_impl == 'pypy']
-  skip: true  # [(py<39 or py>=313) or s390x]
+  skip: true  # [py<310 or s390x]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
@@ -37,13 +37,13 @@ requirements:
     - pip
     - setuptools
     - wheel
-    - llvmlite 0.43.0
+    - llvmlite 0.44.0
     - numpy 2.0.2
     - tbb-devel 2021.8.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
-    - llvmlite >=0.43.0,<0.44.0a0
+    - llvmlite >=0.44.0,<0.45.0a0
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22.3,<2.1,!=2.0.1
   run_constrained:
