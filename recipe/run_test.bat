@@ -13,7 +13,7 @@ numba -s
 python -m numba.tests.test_runtests
 
 @rem Run the whole test suite
-python -m numba.runtests -m %CPU_COUNT% -b
+python -m numba.runtests -m %CPU_COUNT% -b  --exclude-tags='long_running'
 
 if errorlevel 1 exit 1
 
