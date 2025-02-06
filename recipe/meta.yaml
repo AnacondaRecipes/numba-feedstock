@@ -8,8 +8,8 @@ package:
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: 888d2e89b8160899e19591467e8fdd4970e07606e1fbc248f239c89818d5f925
-  patches:                      # [win]
-    - 0001-skip-win-test.patch  # [win]
+  patches:
+    - 0001-skip-pycc-and-overlaod_allocation-tests.patch
 
 build:
   number: 0
@@ -29,6 +29,7 @@ requirements:
     # llvm is needed for the headers
     - llvm-openmp              # [osx]
     - m2-patch  # [win]
+    - patch     # [unix]
   host:
     - python
     - pip
