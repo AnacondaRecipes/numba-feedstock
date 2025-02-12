@@ -12,7 +12,7 @@ source:
     - 0001-skip-pycc-and-overlaod_allocation-tests.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [python_impl == 'pypy']
   skip: true  # [(py<310 or py>=314) or s390x]
   script:
