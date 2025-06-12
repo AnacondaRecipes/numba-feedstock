@@ -10,6 +10,7 @@ source:
   sha256: 8750ee147940a6637b80ecf7f95062185ad8726c8c28a2295b8ec1160a196f7d
   patches:
     - 0001-skip-pycc-and-overlaod_allocation-tests.patch
+    - 0002-fix-python-3.13.4.patch
 
 build:
   number: 0
