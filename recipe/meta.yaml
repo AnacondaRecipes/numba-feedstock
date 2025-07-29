@@ -13,7 +13,7 @@ source:
     - 0002-fix-python-3.13.4.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [python_impl == 'pypy']
   skip: true  # [(py<310 or py>=314) or s390x]
   script:
