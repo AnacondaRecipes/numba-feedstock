@@ -16,6 +16,8 @@ build:
   number: 1
   skip: true  # [python_impl == 'pypy']
   skip: true  # [(py<310 or py>=314) or s390x]
+  # Just for testing. 
+  skip: true  # [not osx]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
