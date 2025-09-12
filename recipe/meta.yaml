@@ -13,7 +13,7 @@ source:
     - 0002-fix-python-3.13.4.patch
 
 build:
-  number: 0
+  number: 1
   skip: true  # [python_impl == 'pypy']
   skip: true  # [(py<310 or py>=314) or s390x]
   script:
@@ -26,11 +26,10 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
     - llvm-openmp              # [osx]
-    - m2-patch  # [win]
-    - patch     # [unix]
   host:
     - python
     - pip
@@ -38,7 +37,7 @@ requirements:
     - wheel
     - llvmlite 0.44.0
     - numpy >=2.0.0rc1,<2.3
-    - tbb-devel 2021.8.0
+    - tbb-devel 2022.0.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
@@ -46,7 +45,7 @@ requirements:
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.24,<2.3,!=2.0.1
   run_constrained:
-    - tbb >=2021.6,<2022
+    - tbb >=2021.6
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6      # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
@@ -57,8 +56,6 @@ requirements:
     - scipy >=1.0
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
-    # numba-rvsdg
-    - numba-rvsdg 0.0.*      # [py==311]
 
 test:
   requires:
@@ -71,9 +68,10 @@ test:
     - pygments
     - pexpect
     - pip
-    - tbb >=2021.6,<2022
+    - tbb
     # Need these for AOT.
     - {{ compiler('c') }}
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
 
   imports:
