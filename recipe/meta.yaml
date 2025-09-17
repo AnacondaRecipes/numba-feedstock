@@ -13,7 +13,7 @@ source:
 
 build:
   number: 0
-  skip: true  # [py<310 and py>=314]
+  skip: true  # [py<310 or py>=314]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
