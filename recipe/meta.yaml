@@ -32,7 +32,7 @@ requirements:
     - python
     - pip
     - setuptools
-    - llvmlite 0.45
+    - llvmlite 0.45.0rc2
     - numpy >=2.0.0rc1,<2.4
     - numpy {{ numpy }}
     - tbb-devel 2022.0.0
