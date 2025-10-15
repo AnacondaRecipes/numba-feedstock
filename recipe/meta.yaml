@@ -1,15 +1,13 @@
 {% set name = "numba" %}
-{% set version = "0.62.0rc2" %}
+{% set version = "0.62.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  git_url: https://github.com/numba/numba.git
-  git_tag: {{ version }}
-  #url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  #sha256: 8750ee147940a6637b80ecf7f95062185ad8726c8c28a2295b8ec1160a196f7d
+  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 7b774242aa890e34c21200a1fc62e5b5757d5286267e71103257f4e2af0d5161
 
 build:
   number: 0
@@ -27,19 +25,19 @@ requirements:
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
-    - llvm-openmp 20          # [osx]
+    - llvm-openmp 19          # [osx]
   host:
     - python
     - pip
     - setuptools
-    - llvmlite 0.45.0rc2
+    - llvmlite 0.45.1
     - numpy >=2.0.0rc1,<2.4
     - numpy {{ numpy }}
     - tbb-devel 2022.0.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
-    - llvmlite >=0.44.0dev0,<0.45
+    - llvmlite >=0.45.0dev0,<0.46
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.4,!=2.0.1
   run_constrained:
@@ -54,8 +52,6 @@ requirements:
     - scipy >=1.0
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
-    # numba-rvsdg
-    - numba-rvsdg 0.0.*      # [py==311]
 
 test:
   requires:
