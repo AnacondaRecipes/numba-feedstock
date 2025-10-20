@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.61.2" %}
+{% set version = "0.62.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,15 +7,11 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 8750ee147940a6637b80ecf7f95062185ad8726c8c28a2295b8ec1160a196f7d
-  patches:
-    - 0001-skip-pycc-and-overlaod_allocation-tests.patch
-    - 0002-fix-python-3.13.4.patch
+  sha256: 7b774242aa890e34c21200a1fc62e5b5757d5286267e71103257f4e2af0d5161
 
 build:
   number: 0
-  skip: true  # [python_impl == 'pypy']
-  skip: true  # [(py<310 or py>=314) or s390x]
+  skip: true  # [py<310 or py>=314]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
@@ -26,27 +22,26 @@ build:
 requirements:
   build:
     - {{ compiler('c') }}
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
     # llvm is needed for the headers
-    - llvm-openmp              # [osx]
-    - m2-patch  # [win]
-    - patch     # [unix]
+    - llvm-openmp 19          # [osx]
   host:
     - python
     - pip
     - setuptools
-    - wheel
-    - llvmlite 0.44.0
-    - numpy >=2.0.0rc1,<2.3
-    - tbb-devel 2021.8.0
+    - llvmlite 0.45.1
+    - numpy >=2.0.0rc1,<2.4
+    - numpy {{ numpy }}
+    - tbb-devel 2022.0.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
-    - llvmlite >=0.44.0dev0,<0.45
+    - llvmlite >=0.45.0dev0,<0.46
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
-    - numpy >=1.24,<2.3,!=2.0.1
+    - numpy >=1.22,<2.4,!=2.0.1
   run_constrained:
-    - tbb >=2021.6,<2022
+    - tbb >=2022
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6      # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
@@ -57,23 +52,24 @@ requirements:
     - scipy >=1.0
     # CUDA Python 11.6 or later
     - cuda-python >=11.6
-    # numba-rvsdg
-    - numba-rvsdg 0.0.*      # [py==311]
 
 test:
   requires:
-    # Required to test optional Numba features
+    - pip
     - jinja2
+    # Required to test optional Numba features
     - cffi
     - scipy
     - ipython
     - ipykernel
+    # for pycc
+    - setuptools
     - pygments
     - pexpect
-    - pip
-    - tbb >=2021.6,<2022
+    - tbb
     # Need these for AOT.
     - {{ compiler('c') }}
+    - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
 
   imports:
