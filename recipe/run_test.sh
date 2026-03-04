@@ -33,7 +33,7 @@ fi
 # This is needed because only dispatched features can be disabled via NPY_DISABLE_CPU_FEATURES.
 _NPY_CMD='from numba.misc import numba_sysinfo; si=numba_sysinfo.get_sysinfo();\
           print(si["NumPy AVX512_SKX detected"] and "AVX512_SKX" in si.get("NumPy Supported SIMD dispatch", ()))'
-DISABLE_AVX512_SKX=$($PYTHON_PATH -c "$_NPY_CMD")
+DISABLE_AVX512_SKX=$(python -c "$_NPY_CMD")
 echo "Disable AVX512_SKX: $DISABLE_AVX512_SKX"
 
 if [[ "$DISABLE_AVX512_SKX" == "True" ]]; then
