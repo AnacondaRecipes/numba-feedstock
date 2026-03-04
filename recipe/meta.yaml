@@ -39,7 +39,7 @@ requirements:
     - python
     - llvmlite >=0.46.0dev0,<0.48
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
-    - numpy >=1.22,<2.5
+    - numpy >=1.22,<2.5,!=2.0.1
   run_constrained:
     - tbb >=2022
     # avoid confusion from openblas bugs
@@ -114,8 +114,6 @@ about:
   doc_url: https://numba.readthedocs.io/
 
 extra:
-  skip-lints:
-    - invalid_url
   recipe-maintainers:
     - souravsingh
     - marcelotrevisani
