@@ -36,7 +36,7 @@ requirements:
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
-    - llvmlite >=0.46.0dev0,<0.48
+    - llvmlite >=0.46.0dev0,<0.47
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.5,!=2.0.1
   run_constrained:
