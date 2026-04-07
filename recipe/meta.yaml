@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.64.0" %}
+{% set version = "0.65.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 95e7300af648baa3308127b1955b52ce6d11889d16e8cfe637b4f85d2fca52b1
+  sha256: edad0d9f6682e93624c00125a471ae4df186175d71fd604c983c377cdc03e68b
 
 build:
   number: 0
@@ -30,13 +30,13 @@ requirements:
     - python
     - pip
     - setuptools
-    - llvmlite 0.46.0
+    - llvmlite 0.47.0
     - numpy {{ numpy }}
     - tbb-devel 2022.0.0
     - _openmp_mutex 5.1        # [linux]
   run:
     - python
-    - llvmlite >=0.46.0dev0,<0.47
+    - llvmlite >=0.47.0dev0,<0.48
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.5,!=2.0.1
   run_constrained:
