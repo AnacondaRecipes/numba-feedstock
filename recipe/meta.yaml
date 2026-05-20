@@ -10,7 +10,7 @@ source:
   sha256: 19357146c32fe9ed25059ab915e8465fb13951cf6b0aace3826b76886373ab23
 
 build:
-  number: 0
+  number: 1
   skip: true  # [py<310]
   script:
     - export CC="${CC} -pthread"  # [linux]
@@ -24,8 +24,6 @@ requirements:
     - {{ compiler('c') }}
     - {{ stdlib('c') }}
     - {{ compiler('cxx') }}
-    # llvm is needed for the headers
-    - llvm-openmp 19          # [osx]
   host:
     - python
     - pip
@@ -33,12 +31,17 @@ requirements:
     - llvmlite 0.47.0
     - numpy {{ numpy }}
     - tbb-devel 2022.0.0
-    - _openmp_mutex 5.1        # [linux]
+    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - libgomp        # [linux]
+    - vcomp14        # [win and x86_64]
   run:
     - python
     - llvmlite >=0.47.0dev0,<0.48
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.5,!=2.0.1
+    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - libgomp        # [linux]
+    - vcomp14        # [win and x86_64]
   run_constrained:
     - tbb >=2022
     # avoid confusion from openblas bugs
