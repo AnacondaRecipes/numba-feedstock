@@ -31,9 +31,9 @@ numba -s
 python -m numba.tests.test_runtests
 
 if [[ "$build_platform" != "$target_platform" ]]; then
-	echo "Skipping numba test suite on $archstr because $build_platform != $host_platform"
+	echo "Skipping numba test suite on $archstr because $build_platform != $target_platform"
 else
-	echo "Running all the tests except long_running on '$targt_platform'"
+	echo "Running all the tests except long_running on '$target_platform'"
 
     # Disable NumPy dispatching to AVX512_SKX feature extensions if the chip is
     # reported to support the feature and NumPy >= 1.22 as this results in the use

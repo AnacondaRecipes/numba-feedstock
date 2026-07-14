@@ -30,7 +30,7 @@ requirements:
     - setuptools
     - llvmlite 0.48.0
     - numpy {{ numpy }}
-    - tbb-devel 2023.0.0
+    - tbb-devel {{ tbb }}
     - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
     - libgomp        # [linux]
     - vcomp14        # [win and x86_64]
@@ -43,7 +43,7 @@ requirements:
     - libgomp        # [linux]
     - vcomp14        # [win and x86_64]
   run_constrained:
-    - tbb >=2023
+    - tbb >={{ tbb }}
     # avoid confusion from openblas bugs
     - libopenblas !=0.3.6      # [x86_64]
     - libopenblas >=0.3.18, !=0.3.20  # [arm64]
