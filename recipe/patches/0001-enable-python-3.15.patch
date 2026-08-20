@@ -1,0 +1,13 @@
+diff --git a/setup.py b/setup.py
+--- a/setup.py
++++ b/setup.py
+@@ -20,7 +20,8 @@
+ 
+ 
+ min_python_version = "3.10"
+-max_python_version = "3.15"  # exclusive
++# exclusive; 0.66.0 upstream is <3.15. Lift for 3.15.0rc1 bootstrap (numba-hatchery#15).
++max_python_version = "3.16"  # exclusive
+ min_numpy_build_version = "2.0.0rc1"
+ min_numpy_run_version = "1.22"
+ max_numpy_run_version = "2.5"
