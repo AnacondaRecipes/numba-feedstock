@@ -1,7 +1,109 @@
+From 01c59bf64182c37e6f793822efad210b7ecead6a Mon Sep 17 00:00:00 2001
+From: Serhii Kupriienko <skupriienko@anaconda.com>
+Date: Thu, 20 Aug 2026 14:32:18 +0000
+Subject: [PATCH] Enable CPython 3.15 in Numba 0.66.0 C extensions
+
+setup.py already allowed 3.15; NB_SUPPORTED_PYTHON_MINOR and the
+3.13/3.14 C API branches still rejected 3.15 and left _Py_IsFinalizing
+undeclared. Treat 3.15 like 3.14 for the bootstrap rebuild.
+
+Co-authored-by: Cursor <cursoragent@cursor.com>
+---
+ numba/_dispatcher.cpp | 4 ++--
+ numba/_dynfunc.c      | 2 +-
+ numba/_helperlib.c    | 4 ++--
+ numba/_pymodule.h     | 2 +-
+ numba/_typeof.cpp     | 2 +-
+ setup.py              | 3 ++-
+ 6 files changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/numba/_dispatcher.cpp b/numba/_dispatcher.cpp
+index ad74b87..2eeda49 100644
+--- a/numba/_dispatcher.cpp
++++ b/numba/_dispatcher.cpp
+@@ -27,7 +27,7 @@
+  *
+  */
+ 
+-#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14))
++#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14) || (PY_MINOR_VERSION == 15))
+ 
+ #ifndef Py_BUILD_CORE
+     #define Py_BUILD_CORE 1
+@@ -1644,7 +1644,7 @@ static PyTypeObject DispatcherType = {
+ };
+ 
+ 
+-#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14))
++#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14) || (PY_MINOR_VERSION == 15))
+ static
+ bool is_sysmon_enabled(Dispatcher * self) {
+     return self->enable_sysmon;
+diff --git a/numba/_dynfunc.c b/numba/_dynfunc.c
+index d2722d5..3922cb0 100644
+--- a/numba/_dynfunc.c
++++ b/numba/_dynfunc.c
+@@ -9,7 +9,7 @@
+ 
+ 
+ // if python version is 3.13
+-#if ((PY_MAJOR_VERSION == 3) && ((PY_MINOR_VERSION == 13) || PY_MINOR_VERSION == 14))
++#if ((PY_MAJOR_VERSION == 3) && ((PY_MINOR_VERSION == 13) || PY_MINOR_VERSION == 14 || PY_MINOR_VERSION == 15))
+     #include "pythoncapi_compat.h"
+     #define _Py_IsFinalizing Py_IsFinalizing
+ #endif
+diff --git a/numba/_helperlib.c b/numba/_helperlib.c
+index 14d57ca..1172be7 100644
+--- a/numba/_helperlib.c
++++ b/numba/_helperlib.c
+@@ -839,7 +839,7 @@ static void traceback_add(const char *funcname, const char *filename, int lineno
+     if (!frame)
+         goto error;
+ 
+-#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14))
++#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14) || (PY_MINOR_VERSION == 15))
+ #elif (PY_MAJOR_VERSION == 3) && (PY_MINOR_VERSION == 11) /* 3.11 */
+ 
+     /* unsafe cast to our copy of _frame to access the f_lineno field */
+@@ -857,7 +857,7 @@ static void traceback_add(const char *funcname, const char *filename, int lineno
+     Py_DECREF(frame);
+     return;
+ 
+-#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14))
++#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14) || (PY_MINOR_VERSION == 15))
+ error:
+     _PyErr_ChainExceptions1(exc);
+ #elif (PY_MAJOR_VERSION == 3) && ((PY_MINOR_VERSION == 10) || (PY_MINOR_VERSION == 11)) /* 3.11 and below */
+diff --git a/numba/_pymodule.h b/numba/_pymodule.h
+index 4de1f72..58da9cd 100644
+--- a/numba/_pymodule.h
++++ b/numba/_pymodule.h
+@@ -46,6 +46,6 @@
+         Py_DECREF(tmp); } while (0)
+ 
+ 
+-#define NB_SUPPORTED_PYTHON_MINOR ((PY_MINOR_VERSION == 10) || (PY_MINOR_VERSION == 11) || (PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14))
++#define NB_SUPPORTED_PYTHON_MINOR ((PY_MINOR_VERSION == 10) || (PY_MINOR_VERSION == 11) || (PY_MINOR_VERSION == 12) || (PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14) || (PY_MINOR_VERSION == 15))
+ 
+ #endif /* NUMBA_PY_MODULE_H_ */
+diff --git a/numba/_typeof.cpp b/numba/_typeof.cpp
+index efd413f..477c374 100644
+--- a/numba/_typeof.cpp
++++ b/numba/_typeof.cpp
+@@ -16,7 +16,7 @@
+     #include <numpy/npy_2_compat.h>
+ #endif
+ 
+-#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14))
++#if (PY_MAJOR_VERSION >= 3) && ((PY_MINOR_VERSION == 13) || (PY_MINOR_VERSION == 14) || (PY_MINOR_VERSION == 15))
+     #ifndef Py_BUILD_CORE
+         #define Py_BUILD_CORE 1
+     #endif
 diff --git a/setup.py b/setup.py
+index 41fc62b..232e80d 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -20,7 +20,8 @@
+@@ -20,7 +20,8 @@ except ImportError:
  
  
  min_python_version = "3.10"
@@ -11,3 +113,6 @@ diff --git a/setup.py b/setup.py
  min_numpy_build_version = "2.0.0rc1"
  min_numpy_run_version = "1.22"
  max_numpy_run_version = "2.5"
+-- 
+2.51.0
+
