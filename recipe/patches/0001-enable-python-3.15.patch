@@ -1,21 +1,15 @@
-From 947d9ce0c76ffeb319e24bf69477fe33025cbe64 Mon Sep 17 00:00:00 2001
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
 From: Serhii Kupriienko <skupriienko@anaconda.com>
-Date: Thu, 20 Aug 2026 15:43:32 +0000
+Date: Thu, 20 Aug 2026 16:30:00 +0000
 Subject: [PATCH] Enable CPython 3.15 in Numba 0.66.0
 
 Lift setup.py and C version guards, and compile C++ with /std:c++20 on MSVC
 so pycore_backoff.h (CPython 3.15) accepts designated initializers.
+Keep mixed C/C++ nrt extra_compile_args MSVC-only so GCC/Clang do not pass
+-std=c++11 to _nrt_pythonmod.c.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
 ---
- numba/_dispatcher.cpp |  4 ++--
- numba/_dynfunc.c      |  2 +-
- numba/_helperlib.c    |  4 ++--
- numba/_pymodule.h     |  2 +-
- numba/_typeof.cpp     |  2 +-
- setup.py              | 20 +++++++++++++-------
- 6 files changed, 20 insertions(+), 14 deletions(-)
-
 diff --git a/numba/_dispatcher.cpp b/numba/_dispatcher.cpp
 index ad74b87..2eeda49 100644
 --- a/numba/_dispatcher.cpp
@@ -99,7 +93,7 @@ index efd413f..477c374 100644
          #define Py_BUILD_CORE 1
      #endif
 diff --git a/setup.py b/setup.py
-index 41fc62b..3dbd558 100644
+index 41fc62b..733da96 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -20,7 +20,8 @@ except ImportError:
@@ -160,17 +154,14 @@ index 41fc62b..3dbd558 100644
              ompcompileflags = ['-openmp']
              omplinkflags = []
          else:
-@@ -356,9 +363,8 @@ def get_ext_modules():
+@@ -356,6 +363,10 @@ def get_ext_modules():
                                 depends=['numba/core/runtime/nrt.h',
                                          'numba/_pymodule.h',
                                          'numba/core/runtime/_nrt_python.c'],
-+                               extra_compile_args=cxx_std_flags,
++                               extra_compile_args=(cxx_std_flags
++                                                   if sys.platform.startswith('win')
++                                                   and 'MSC' in sys.version
++                                                   else []),
                                 **np_compile_args)
--
--    ext_jitclass_box = Extension(name='numba.experimental.jitclass._box',
-                                  sources=['numba/experimental/jitclass/_box.c'],
-                                  depends=['numba/experimental/_pymodule.h'],
-                                  )
--- 
-2.51.0
-
+ 
+     ext_jitclass_box = Extension(name='numba.experimental.jitclass._box',
