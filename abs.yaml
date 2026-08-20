@@ -9,8 +9,6 @@ upload_channels:
 
 channels:
   - ad-testing/label/py315
-  # llvmlite py315 is on PR staging until review-gated promotion (U12: strip before merge).
-  - https://staging.continuum.io/pbp/fs/llvmlite-feedstock/pr23/02cc7b8
 
 build_env_vars:
   ANACONDA_ROCKET_ENABLE_PY315: True
