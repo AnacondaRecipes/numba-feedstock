@@ -14,6 +14,15 @@ source:
 
 build:
   number: 0
+  ignore_run_exports:
+    # numpy is a Python import; DSOs live in numpy-base.
+    - numpy
+    # omppool links libgomp, not the mutex metapackage.
+    - _openmp_mutex  # [linux]
+    # libc++ comes from the macOS SDK, not conda libcxx.
+    - libcxx  # [osx]
+    # setup.py reports "OpenMP not found" on this osx worker; pin is unused.
+    - llvm-openmp  # [osx]
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]

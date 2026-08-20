@@ -1,21 +1,20 @@
-From 01c59bf64182c37e6f793822efad210b7ecead6a Mon Sep 17 00:00:00 2001
+From 947d9ce0c76ffeb319e24bf69477fe33025cbe64 Mon Sep 17 00:00:00 2001
 From: Serhii Kupriienko <skupriienko@anaconda.com>
-Date: Thu, 20 Aug 2026 14:32:18 +0000
-Subject: [PATCH] Enable CPython 3.15 in Numba 0.66.0 C extensions
+Date: Thu, 20 Aug 2026 15:43:32 +0000
+Subject: [PATCH] Enable CPython 3.15 in Numba 0.66.0
 
-setup.py already allowed 3.15; NB_SUPPORTED_PYTHON_MINOR and the
-3.13/3.14 C API branches still rejected 3.15 and left _Py_IsFinalizing
-undeclared. Treat 3.15 like 3.14 for the bootstrap rebuild.
+Lift setup.py and C version guards, and compile C++ with /std:c++20 on MSVC
+so pycore_backoff.h (CPython 3.15) accepts designated initializers.
 
 Co-authored-by: Cursor <cursoragent@cursor.com>
 ---
- numba/_dispatcher.cpp | 4 ++--
- numba/_dynfunc.c      | 2 +-
- numba/_helperlib.c    | 4 ++--
- numba/_pymodule.h     | 2 +-
- numba/_typeof.cpp     | 2 +-
- setup.py              | 3 ++-
- 6 files changed, 9 insertions(+), 8 deletions(-)
+ numba/_dispatcher.cpp |  4 ++--
+ numba/_dynfunc.c      |  2 +-
+ numba/_helperlib.c    |  4 ++--
+ numba/_pymodule.h     |  2 +-
+ numba/_typeof.cpp     |  2 +-
+ setup.py              | 20 +++++++++++++-------
+ 6 files changed, 20 insertions(+), 14 deletions(-)
 
 diff --git a/numba/_dispatcher.cpp b/numba/_dispatcher.cpp
 index ad74b87..2eeda49 100644
@@ -100,7 +99,7 @@ index efd413f..477c374 100644
          #define Py_BUILD_CORE 1
      #endif
 diff --git a/setup.py b/setup.py
-index 41fc62b..232e80d 100644
+index 41fc62b..3dbd558 100644
 --- a/setup.py
 +++ b/setup.py
 @@ -20,7 +20,8 @@ except ImportError:
@@ -113,6 +112,65 @@ index 41fc62b..232e80d 100644
  min_numpy_build_version = "2.0.0rc1"
  min_numpy_run_version = "1.22"
  max_numpy_run_version = "2.5"
+@@ -140,13 +141,19 @@ def get_ext_modules():
+     np_compile_args = {'include_dirs': [np.get_include(),],}
+     if sys.platform != 'win32':
+         np_compile_args['libraries'] = ['m',]
++    # CPython 3.15 headers (pycore_backoff.h) need C++20 designated initializers.
++    # MSVC ignores -std=c++11 (D9002) and then fails C7555.
++    if sys.platform.startswith('win') and 'MSC' in sys.version:
++        cxx_std_flags = ['/std:c++20']
++    else:
++        cxx_std_flags = ['-std=c++11']
+ 
+     ext_devicearray = Extension(name='numba._devicearray',
+                                 sources=['numba/_devicearray.cpp'],
+                                 depends=['numba/_pymodule.h',
+                                          'numba/_devicearray.h'],
+                                 include_dirs=['numba'],
+-                                extra_compile_args=['-std=c++11'],
++                                extra_compile_args=cxx_std_flags,
+                                 )
+ 
+     ext_dynfunc = Extension(name='numba._dynfunc',
+@@ -165,7 +172,7 @@ def get_ext_modules():
+                                depends=["numba/_pymodule.h",
+                                         "numba/_typeof.h",
+                                         "numba/_hashtable.h"],
+-                               extra_compile_args=['-std=c++11'],
++                               extra_compile_args=cxx_std_flags,
+                                **np_compile_args)
+ 
+     ext_helperlib = Extension(name="numba._helperlib",
+@@ -190,7 +197,7 @@ def get_ext_modules():
+                              sources=["numba/core/typeconv/typeconv.cpp",
+                                       "numba/core/typeconv/_typeconv.cpp"],
+                              depends=["numba/_pymodule.h"],
+-                             extra_compile_args=['-std=c++11'],
++                             extra_compile_args=cxx_std_flags,
+                              )
+ 
+     ext_np_ufunc = Extension(name="numba.np.ufunc._internal",
+@@ -242,7 +249,7 @@ def get_ext_modules():
+     have_openmp = True
+     if sys.platform.startswith('win'):
+         if 'MSC' in sys.version:
+-            cpp11flags = []
++            cpp11flags = cxx_std_flags
+             ompcompileflags = ['-openmp']
+             omplinkflags = []
+         else:
+@@ -356,9 +363,8 @@ def get_ext_modules():
+                                depends=['numba/core/runtime/nrt.h',
+                                         'numba/_pymodule.h',
+                                         'numba/core/runtime/_nrt_python.c'],
++                               extra_compile_args=cxx_std_flags,
+                                **np_compile_args)
+-
+-    ext_jitclass_box = Extension(name='numba.experimental.jitclass._box',
+                                  sources=['numba/experimental/jitclass/_box.c'],
+                                  depends=['numba/experimental/_pymodule.h'],
+                                  )
 -- 
 2.51.0
 
