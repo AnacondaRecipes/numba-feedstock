@@ -30,10 +30,10 @@ requirements:
     - setuptools
     - llvmlite 0.49.0
     - numpy {{ numpy }}
-    - tbb-devel {{ tbb }}
+    - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings  # CBC var resolves to an exact pin (2023.0.0); linter cannot resolve the aggregate-only key
     - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
-    - libgomp        # [linux]
-    - vcomp14        # [win and x86_64]
+    - libgomp        # [linux] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
+    - vcomp14        # [win and x86_64] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
   run:
     - python
     - llvmlite >=0.49.0,<0.50
