@@ -32,7 +32,8 @@ requirements:
     - llvmlite 0.50.0
     - numpy {{ numpy }}
     - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings
-    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - llvm-openmp {{ cxx_compiler_version }}  # [osx]
+    - llvm-openmp 20.1.8 # [win and arm64]
     - libgomp        # [linux] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
     - vcomp14        # [win and x86_64] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
   run:
@@ -40,7 +41,7 @@ requirements:
     - llvmlite >=0.50.0,<0.51
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.6,!=2.0.1
-    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - llvm-openmp    # [osx or (win and arm64)]
     - libgomp        # [linux]
     - vcomp14        # [win and x86_64]
   run_constrained:
