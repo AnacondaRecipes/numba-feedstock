@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.67.0" %}
+{% set version = "0.68.0" %}
 
 package:
   name: {{ name }}
@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: cd75aa535b33fa05d9d930b1ae8af9f97a2881e96d72dfb38ec9b78284d9f851
+  sha256: 8a781de54b980b98f43bff7f1093701b5f07c80d031c7cfa8a87493d8bf73f2d
 
 build:
   number: 0
@@ -28,18 +28,19 @@ requirements:
     - python
     - pip
     - setuptools
-    - llvmlite 0.49.0
+    - llvmlite 0.50.0
     - numpy {{ numpy }}
-    - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings  # CBC var resolves to an exact pin (2023.0.0); linter cannot resolve the aggregate-only key
-    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings
+    - llvm-openmp {{ cxx_compiler_version }}  # [osx]
+    - llvm-openmp 20.1.8 # [win and arm64]
     - libgomp        # [linux] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
     - vcomp14        # [win and x86_64] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
   run:
     - python
-    - llvmlite >=0.49.0,<0.50
+    - llvmlite >=0.50.0,<0.51
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.6,!=2.0.1
-    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - llvm-openmp    # [osx or (win and arm64)]
     - libgomp        # [linux]
     - vcomp14        # [win and x86_64]
   run_constrained:
@@ -58,16 +59,16 @@ requirements:
 test:
   requires:
     - pip
-    - jinja2
+    - jinja2                   # [py<315]
     # Required to test optional Numba features
-    - cffi
-    - scipy
-    - ipython
-    - ipykernel
+    - cffi                     # [py<315]
+    - scipy                    # [py<315]
+    - ipython                  # [py<315]
+    - ipykernel                # [py<315]
     # for pycc
-    - setuptools
-    - pygments
-    - pexpect
+    - setuptools >=69.0.0
+    - pygments                 # [py<315]
+    - pexpect                  # [py<315]
     - tbb
     # Need these for AOT.
     - {{ compiler('c') }}
