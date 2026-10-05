@@ -28,7 +28,6 @@ requirements:
     - python
     - pip
     - setuptools
-    # llvmlite 0.50 is not on pkgs/main yet; resolved from the PBP graph channels in abs.yaml
     - llvmlite 0.50.0
     - numpy {{ numpy }}
     - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings

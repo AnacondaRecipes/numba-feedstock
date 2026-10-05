@@ -1,5 +1,0 @@
-# llvmlite 0.50 is not on pkgs/main yet; resolve it from these PBP graphs.
-# REMOVE once llvmlite 0.50 is released to pkgs/main.
-channels:
-  - https://package-build.internal.anaconda.com/pkg-orchestrator/v1/channels/graphs/02e34328-ac48-4c27-9c81-863f93ca5d58
-  - https://package-build.internal.anaconda.com/pkg-orchestrator/v1/channels/graphs/475200e6-bddf-48d0-b261-20ec5b574f57
