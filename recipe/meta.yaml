@@ -28,7 +28,7 @@ requirements:
     - python
     - pip
     - setuptools
-    - llvmlite 0.50.0
+    - llvmlite 0.49.0
     - numpy {{ numpy }}
     - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings
     - llvm-openmp {{ cxx_compiler_version }}  # [osx]
