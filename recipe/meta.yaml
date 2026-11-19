@@ -31,7 +31,8 @@ requirements:
     - llvmlite 0.49.0
     - numpy {{ numpy }}
     - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings  # CBC var resolves to an exact pin (2023.0.0); linter cannot resolve the aggregate-only key
-    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - llvm-openmp {{ cxx_compiler_version }}  # [osx]
+    - llvm-openmp 20.1.8  # [win and arm64]
     - libgomp        # [linux] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
     - vcomp14        # [win and x86_64] analint: host_section_needs_exact_pinnings  # OpenMP runtime provided by the compiler toolchain
   run:
@@ -39,7 +40,7 @@ requirements:
     - llvmlite >=0.49.0,<0.50
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.6,!=2.0.1
-    - llvm-openmp {{ cxx_compiler_version }}  # [osx or (win and arm64)]
+    - llvm-openmp    # [osx or (win and arm64)]
     - libgomp        # [linux]
     - vcomp14        # [win and x86_64]
   run_constrained:
@@ -58,16 +59,16 @@ requirements:
 test:
   requires:
     - pip
-    - jinja2
+    - jinja2                   # [py<315]
     # Required to test optional Numba features
-    - cffi
-    - scipy
-    - ipython
-    - ipykernel
+    - cffi                     # [py<315]
+    - scipy                    # [py<315]
+    - ipython                  # [py<315]
+    - ipykernel                # [py<315]
     # for pycc
     - setuptools
-    - pygments
-    - pexpect
+    - pygments                 # [py<315]
+    - pexpect                  # [py<315]
     - tbb
     # Need these for AOT.
     - {{ compiler('c') }}
