@@ -8,6 +8,10 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
   sha256: cd75aa535b33fa05d9d930b1ae8af9f97a2881e96d72dfb38ec9b78284d9f851
+  patches:
+    # backport of numba/numba@da0ee5fbf: Python 3.12 pycore_atomic.h ARM64 MSVC
+    # path is invalid C++ (MSVC C2664) on win-arm64; drop when >= 0.68
+    - patches/py312-arm64-pycore-atomic.patch  # [win and arm64]
 
 build:
   number: 1
