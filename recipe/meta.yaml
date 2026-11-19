@@ -37,7 +37,7 @@ requirements:
     - vcomp14 {{ vcomp14 }}        # [win and x86_64]
   run:
     - python
-    - llvmlite >=0.50.0,<0.51
+    - llvmlite >=0.49.0,<0.50
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.6,!=2.0.1
     - llvm-openmp    # [osx or (win and arm64)]
