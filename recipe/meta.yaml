@@ -11,6 +11,7 @@ source:
   patches:
     # backport of numba/numba@da0ee5fbf: Python 3.12 pycore_atomic.h ARM64 MSVC
     # path is invalid C++ (MSVC C2664) on win-arm64; drop when >= 0.68
+    # upstream direct link: https://github.com/numba/numba/commit/da0ee5fbf2e42510e8f69e1032e09a5817d2eaba
     - patches/py312-arm64-pycore-atomic.patch  # [win and arm64]
 
 build:
