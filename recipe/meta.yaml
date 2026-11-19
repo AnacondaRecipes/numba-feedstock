@@ -10,7 +10,7 @@ source:
   sha256: cd75aa535b33fa05d9d930b1ae8af9f97a2881e96d72dfb38ec9b78284d9f851
 
 build:
-  number: 0
+  number: 1
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
