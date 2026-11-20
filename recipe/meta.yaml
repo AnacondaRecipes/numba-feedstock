@@ -1,5 +1,5 @@
 {% set name = "numba" %}
-{% set version = "0.68.1" %}
+{% set version = "0.67.0" %}
 
 package:
   name: {{ name }}
@@ -7,10 +7,15 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 9de461812470173a14eeb7e0bbd27c897dffe835402a33861166842fc5f6ea57
+  sha256: cd75aa535b33fa05d9d930b1ae8af9f97a2881e96d72dfb38ec9b78284d9f851
+  patches:
+    # backport of numba/numba@da0ee5fbf: Python 3.12 pycore_atomic.h ARM64 MSVC
+    # path is invalid C++ (MSVC C2664) on win-arm64; drop when >= 0.68
+    # upstream direct link: https://github.com/numba/numba/commit/da0ee5fbf2e42510e8f69e1032e09a5817d2eaba
+    - patches/py312-arm64-pycore-atomic.patch  # [win and arm64]
 
 build:
-  number: 0
+  number: 1
   script:
     - export CC="${CC} -pthread"  # [linux]
     - export CXX="${CXX} -pthread"  # [linux]
@@ -28,7 +33,7 @@ requirements:
     - python
     - pip
     - setuptools
-    - llvmlite 0.50.0
+    - llvmlite 0.49.0
     - numpy {{ numpy }}
     - tbb-devel {{ tbb }}  # analint: host_section_needs_exact_pinnings
     - llvm-openmp {{ cxx_compiler_version }}  # [osx]
@@ -37,7 +42,7 @@ requirements:
     - vcomp14 {{ vcomp14 }}        # [win and x86_64]
   run:
     - python
-    - llvmlite >=0.50.0,<0.51
+    - llvmlite >=0.49.0,<0.50
     # avoid 2.0.1 because of https://github.com/numpy/numpy/pull/27195
     - numpy >=1.22,<2.6,!=2.0.1
     - llvm-openmp    # [osx or (win and arm64)]
@@ -66,7 +71,7 @@ test:
     - ipython                  # [py<315]
     - ipykernel                # [py<315]
     # for pycc
-    - setuptools >=69.0.0
+    - setuptools
     - pygments                 # [py<315]
     - pexpect                  # [py<315]
     - tbb
